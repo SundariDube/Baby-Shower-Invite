@@ -18,7 +18,7 @@
       background: #0b0b0b;
     }
 
-    /* Header/title (keeps page from feeling blank while video loads) */
+    /* Header */
     .header {
       max-width: var(--max);
       margin: 0 auto;
@@ -36,22 +36,18 @@
       font-size: clamp(14px, 2.5vw, 18px);
     }
 
-    /* ===== Video area (portrait 9:16) =====
-       Fills screen width on mobile without squeezing the art */
-    .hero {
-      background: #000;
-    }
+    /* ===== Video area (portrait 9:16) ===== */
+    .hero { background: #000; }
     .video-frame {
-      width: 100vw;          /* use full device width */
+      width: 100vw;
       max-width: 100vw;
       margin: 0 auto;
     }
     .video-box {
       position: relative;
       width: 100%;
-      aspect-ratio: 9 / 16;  /* portrait ratio so it matches your Canva video */
-      /* fallback if aspect-ratio unsupported */
-      height: calc(100vw * 16 / 9);
+      aspect-ratio: 9 / 16;         /* portrait */
+      height: calc(100vw * 16 / 9); /* fallback */
       max-height: 100vh;
       margin: 0 auto;
       background: #000;
@@ -95,14 +91,13 @@
       display: inline-block; text-align: center; padding: 14px 16px;
       border-radius: var(--radius); text-decoration: none; font-weight: 700;
       border: 1px solid #3a3a3a; background: #161616; color: #fff;
+      transition: all 0.2s ease-in-out;
     }
     .btn:hover { filter: brightness(1.08); }
-    .btn.primary { background: #ffcc33; color: #1a1a1a; border-color: #ffcc33; }
-
-    /* Desktop: keep the video big but not overwhelming */
-    @media (min-width: 900px) {
-      .video-frame { max-width: var(--max); }
-      .video-box { max-width: 560px; aspect-ratio: 9 / 16; height: auto; }
+    .btn.primary {
+      background: #1e90ff;   /* Blue theme */
+      color: #fff;
+      border-color: #1e90ff;
     }
   </style>
 </head>
@@ -113,17 +108,15 @@
     <p class="tagline">Watch the video, then use the buttons below.</p>
   </header>
 
-  <!-- Video (Google Drive embed) -->
+  <!-- Video (YouTube, inline) -->
   <section class="hero">
     <div class="video-frame">
       <div class="video-box">
         <iframe
-          src="https://drive.google.com/file/d/1Q75JsIxAkr-viMIwELIVivBYJ6WHLaio/preview"
-          allow="autoplay"
-          allowfullscreen
+          src="https://www.youtube.com/embed/NyOU0G-FLTc?rel=0&modestbranding=1&playsinline=1"
           title="Baby Shower Invite Video"
-          loading="eager"
-          referrerpolicy="no-referrer-when-downgrade"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
         ></iframe>
       </div>
     </div>
