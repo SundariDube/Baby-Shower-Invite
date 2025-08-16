@@ -4,28 +4,23 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Baby Shower Invite — Sanjana & Family</title>
+  <meta name="description" content="Watch the invite video and tap to RSVP, view the registry, photo gallery, and add to calendar."/>
   <style>
-    body { font-family: sans-serif; background:#fafafa; text-align:center; margin:0; padding:20px; }
-    h1 { margin-bottom:10px; }
-    .buttons a { display:inline-block; margin:8px; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:bold; background:#111; color:#fff; }
-    .buttons a:hover { background:#333; }
-  </style>
-</head>
-<body>
-  <h1>Baby Shower Invite 🎉</h1>
-  <p>Welcome! Use the buttons below to RSVP, view the registry, or see our gallery.</p>
+    :root { --max: 980px; --pad: 16px; --radius: 14px; }
 
-  <!-- Video placeholder -->
-  <div style="max-width:780px;margin:0 auto 16px;aspect-ratio:16/9">
-  <iframe src="https://drive.google.com/file/d/1Q75JsIxAkr-viMIwELIVivBYJ6WHLaio/preview" 
-          width="100%" height="100%" 
-          allow="autoplay" frameborder="0"></iframe>
-</div>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: #fff;
+      background: #0b0b0b;
+    }
 
-  <div class="buttons">
-    <a href="https://babyshowersplash.rsvpify.com" target="_blank">RSVP</a>
-    <a href="https://www.babylist.com/list/sanjana-dube" target="_blank">Registry</a>
-    <a href="https://photos.app.goo.gl/your-album" target="_blank">Photo Gallery</a>
-  </div>
-</body>
-</html>
+    /* === Full-screen video area === */
+    .hero {
+      min-height: 100vh;          /* take full screen on mobile */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000
