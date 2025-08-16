@@ -1,0 +1,14 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Baby Shower Invite//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:1ee54ebe-751e-4796-82f0-c52292ee58d5@invite.local
+DTSTAMP:20250816T102556Z
+DTSTART;TZID=Australia/Melbourne:20251004T173000
+DTEND;TZID=Australia/Melbourne:20251004T210000
+SUMMARY:Baby Shower
+LOCATION:Add your venue here
+DESCRIPTION:Tap the RSVP/Registry links on the invite page for more details.
+END:VEVENT
+END:VCALENDAR

@@ -1,0 +1,29 @@
+:root { --max: 780px; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #111; background: #fafafa; line-height: 1.5;
+}
+.hero {
+  text-align: center; padding: 32px 16px; background: #fff;
+  border-bottom: 1px solid #eee;
+}
+.hero h1 { margin: 0 0 8px; font-size: 2rem; }
+.hero .tagline { margin: 0; color: #666; }
+.container { max-width: var(--max); margin: 0 auto; padding: 16px; }
+.video-wrap { background: #000; border-radius: 12px; overflow: hidden; }
+video { display: block; width: 100%; height: auto; }
+.details { margin: 16px 0 8px; }
+.details p { margin: 6px 0; }
+.buttons {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px; margin: 16px 0 24px;
+}
+.btn {
+  display: inline-block; text-align: center; padding: 12px 14px;
+  border-radius: 10px; text-decoration: none; font-weight: 600;
+  border: 1px solid #333; background: #111; color: #fff;
+}
+.btn:hover { filter: brightness(1.06); }
+.btn.outline { background: #fff; color: #111; }
+.credits { text-align: center; color: #777; font-size: 0.9rem; padding-bottom: 16px; }
