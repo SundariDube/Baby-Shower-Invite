@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Baby Shower Invite — Sanjana & Family</title>
   <meta name="description" content="Watch the invite video and tap to RSVP, view the registry, photo gallery, and add to calendar."/>
-  <meta name="theme-color" content="#0b0b0b" />
   <style>
     :root { --max: 980px; --pad: 16px; --radius: 14px; }
 
@@ -18,7 +17,7 @@
       background: #0b0b0b;
     }
 
-    /* Header */
+    /* Header/title above video so it never feels blank */
     .header {
       max-width: var(--max);
       margin: 0 auto;
@@ -36,44 +35,39 @@
       font-size: clamp(14px, 2.5vw, 18px);
     }
 
-    /* ===== Video area (portrait 9:16) ===== */
-    .hero { background: #000; }
+    /* Full-screen-ish video area */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
     .video-frame {
-      width: 100vw;
-      max-width: 100vw;
+      width: 100%;
+      max-width: var(--max);
       margin: 0 auto;
     }
-    .video-box {
-      position: relative;
+    .video-frame iframe {
       width: 100%;
-      aspect-ratio: 9 / 16;         /* portrait */
-      height: calc(100vw * 16 / 9); /* fallback */
-      max-height: 100vh;
-      margin: 0 auto;
-      background: #000;
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .video-box iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+      height: 85vh;
       border: 0;
-      display: block;
+      border-radius: 12px;
       background: #000;
+      display: block;
     }
 
-    /* ===== Info + buttons ===== */
+    /* Buttons / info area */
     .cta {
       max-width: var(--max);
       margin: 0 auto;
       padding: 16px var(--pad) 48px;
       background: #0b0b0b;
     }
+
     .chips {
       display: flex; flex-wrap: wrap; gap: 8px;
-      justify-content: center; margin: 10px 0 18px;
+      justify-content: center;
+      margin: 6px 0 18px;
     }
     .chip {
       background: #1c1c1c; color: #eee; border: 1px solid #2a2a2a;
@@ -91,46 +85,43 @@
       display: inline-block; text-align: center; padding: 14px 16px;
       border-radius: var(--radius); text-decoration: none; font-weight: 700;
       border: 1px solid #3a3a3a; background: #161616; color: #fff;
-      transition: all 0.2s ease-in-out;
     }
     .btn:hover { filter: brightness(1.08); }
-    .btn.primary {
-      background: #1e90ff;   /* Blue theme */
-      color: #fff;
-      border-color: #1e90ff;
+    .btn.primary { background: #3399ff; color: #fff; border-color: #3399ff; }
+
+    /* Desktop: balanced height */
+    @media (min-width: 900px) {
+      .video-frame iframe { height: 70vh; }
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
+  <!-- Always-visible header -->
   <header class="header">
     <h1 class="title">Baby Shower Invite 🎉</h1>
     <p class="tagline">Watch the video, then use the buttons below.</p>
   </header>
 
-  <!-- Video (YouTube, inline) -->
+  <!-- Video -->
   <section class="hero">
     <div class="video-frame">
-      <div class="video-box">
-        <iframe
-          src="https://www.youtube.com/embed/NyOU0G-FLTc?rel=0&modestbranding=1&playsinline=1"
-          title="Baby Shower Invite Video"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-        ></iframe>
-      </div>
+      <iframe
+        src="https://www.youtube.com/embed/NyOU0G-FLTc"
+        allow="autoplay; encrypted-media"
+        allowfullscreen
+        title="Baby Shower Invite Video"
+      ></iframe>
     </div>
   </section>
 
-  <!-- Info + buttons -->
+  <!-- Buttons + info -->
   <section class="cta">
     <div class="chips">
       <span class="chip">September 27</span>
       <span class="chip">4:00 PM Onwards</span>
-      <a class="chip"
-         href="https://www.google.com/maps/search/?api=1&query=11030+Shy+Bird+Ln,+San+Diego,+CA+92128"
+      <a class="chip" href="https://www.google.com/maps/search/?api=1&query=11030+Shy+Bird+Ln,+San+Diego,+CA+92128" 
          target="_blank" rel="noopener">
-        11030 Shy Bird Ln, San Diego CA 92128
+         11030 Shy Bird Ln, San Diego CA 92128
       </a>
     </div>
 
@@ -138,7 +129,7 @@
       <a class="btn primary" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
       <a class="btn" href="event.ics" download>Add to Calendar</a>
       <a class="btn" href="https://www.babylist.com/list/sanjana-dube" target="_blank" rel="noopener">Registry</a>
-      <a class="btn" href="https://photos.app.goo.gl/your-album" target="_blank" rel="noopener">Photo Gallery</a>
+      <a class="btn" href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank" rel="noopener">Photo Gallery</a>
     </nav>
   </section>
 </body>
