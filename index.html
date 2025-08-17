@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://i.ytimg.com">
   <link rel="preconnect" href="https://www.google.com">
 
-  <!-- Social preview (swap preview.jpg later if you add one to /assets) -->
+  <!-- Social preview (optional – add assets/preview.jpg later if you want) -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Sanjana & Priyank — Baby Shower Invite">
   <meta property="og:description" content="RSVP, Registry, Photos & Calendar in one place.">
@@ -22,7 +22,6 @@
   <meta name="twitter:description" content="RSVP, Registry, Photos & Calendar in one place.">
   <meta name="twitter:image" content="https://sundaridube.github.io/Sanjana-Baby-Shower-Invite/assets/preview.jpg">
 
-  <!-- Clean fonts + tiny favicon -->
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%2387cdd6'/%3E%3Cpath fill='%23fff' d='M26 20v24l20-12z'/%3E%3C/svg%3E">
 
@@ -65,8 +64,8 @@
     /* ===== Fullscreen section ===== */
     .hero{
       position:relative;
-      height:100vh;
-      background:#000;
+      height:100vh;             /* take full screen */
+      background:var(--bg);     /* no black background */
       overflow:hidden;
     }
 
@@ -75,42 +74,35 @@
       width:100%;
       height:100%;
       overflow:hidden;
-      z-index:3; /* above bubbles */
+      z-index:3;
     }
 
-    /* Keep whole invite visible on phones (no cropping) */
+    /* Keep the whole invite visible (no cropping) and fill screen */
     .video-frame iframe{
       position:absolute; top:50%; left:50%;
       transform:translate(-50%,-50%);
       width:100vw;
-      height:56.25vw;             /* 100vw * 9/16 */
-      border:0; background:#000; display:block;
+      height:56.25vw;           /* 100vw * 9/16 */
+      border:0; display:block;
+      background:var(--bg);
     }
+    /* If viewport is wider than 16:9, fit by height instead */
     @media (min-aspect-ratio: 16/9){
       .video-frame iframe{
-        width:177.78vh;           /* 100vh * 16/9 */
+        width:177.78vh;         /* 100vh * 16/9 */
         height:100vh;
       }
     }
 
-    /* Soft edge fade to blend any tiny bars */
-    .hero::after{
-      content:"";
-      position:absolute; inset:0; pointer-events:none;
-      background:
-        linear-gradient(to top, rgba(0,0,0,.18), transparent 20%),
-        linear-gradient(to bottom, rgba(0,0,0,.18), transparent 20%);
-      z-index:2;
-    }
-
-    /* animated bubbles backdrop */
+    /* Gentle bubbles on the light background */
     .bubbles{
       position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:1;
     }
     .bubbles span{
       position:absolute; bottom:-120px; left:var(--x,50%);
       width:var(--s,10px); height:var(--s,10px);
-      background:rgba(255,255,255,.35); border-radius:50%;
+      background:rgba(135,205,214,.35);
+      border-radius:50%;
       filter:blur(0.5px);
       animation:rise var(--t,12s) linear infinite;
     }
@@ -193,7 +185,6 @@
       .hero{ height:70vh; }
       .dock{ position:static; padding:28px var(--pad) 56px; }
       .badge{ top:16px; left:16px }
-      .hero::after{ background:none; } /* no fade needed on desktop */
     }
   </style>
 </head>
@@ -226,14 +217,13 @@
     </div>
   </section>
 
-  <!-- Floating buttons -->
+  <!-- Floating buttons (NO share) -->
   <div class="dock">
     <nav class="buttons">
       <a class="btn rsvp" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
       <a class="btn" href="event.ics" download>Add to Calendar</a>
       <a class="btn" href="https://www.babylist.com/list/sanjana-dube" target="_blank" rel="noopener">Registry</a>
       <a class="btn" href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank" rel="noopener">Photo Gallery</a>
-      <a class="btn share" href="#" role="button">Share Invite</a>
     </nav>
   </div>
 
@@ -269,7 +259,7 @@
       if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
     });
 
-    // Confetti on RSVP (no haptics per request)
+    // Confetti on RSVP (no haptics)
     const rsvpLink = document.querySelector('.btn.rsvp');
     const confettiLayer = document.getElementById('confetti');
 
@@ -300,33 +290,6 @@
       const y = rect.top + rect.height/2 + window.scrollY;
       burstConfetti(x, y);
     });
-
-    // One-tap share (Web Share API + fallback to copy)
-    const shareBtn = document.querySelector('.btn.share');
-    if (shareBtn && navigator.share){
-      shareBtn.addEventListener('click', async (e)=>{
-        e.preventDefault();
-        try{
-          await navigator.share({
-            title: 'Sanjana & Priyank — Baby Shower',
-            text: 'Join us! RSVP, Registry, Photos & Calendar:',
-            url: 'https://sundaridube.github.io/Sanjana-Baby-Shower-Invite/'
-          });
-        }catch(err){ /* user closed */ }
-      });
-    }else if(shareBtn){
-      shareBtn.addEventListener('click', async (e)=>{
-        e.preventDefault();
-        try{
-          await navigator.clipboard.writeText('https://sundaridube.github.io/Sanjana-Baby-Shower-Invite/');
-          const old = shareBtn.textContent;
-          shareBtn.textContent = 'Link Copied!';
-          setTimeout(()=> shareBtn.textContent = old, 1200);
-        }catch(err){
-          window.open('https://sundaridube.github.io/Sanjana-Baby-Shower-Invite/','_blank');
-        }
-      });
-    }
   </script>
 
 </body>
