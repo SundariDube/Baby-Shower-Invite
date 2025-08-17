@@ -1,164 +1,151 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Baby Shower Invite — Sanjana & Family</title>
-  <meta name="description" content="Watch the invite video and tap to RSVP, view the registry, photo gallery, and add to calendar."/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanjana & Priyank Baby Shower</title>
   <style>
-    :root{
-      --max:980px;
-      --pad:16px;
-      --radius:999px;
-      --aqua:#87cdd6;
-      --bg:#fafaf6;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:#000;
-      background:var(--bg);
-      overflow-x:hidden;
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fafaf6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
     }
 
-    .hero{
-      position:relative;
-      height:100vh;
-      background:#000;
-    }
-    .video-frame{
-      width:100%;
-      height:100%;
-      max-width:100%;
-      margin:0 auto;
-      position:relative;
-    }
-    iframe{
-      width:100%;
-      height:100%;
-      border:0;
-      background:#000;
-      display:block;
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 9 / 16;
+      margin-bottom: 16px;
     }
 
-    /* Custom play button overlay */
-    .play-overlay{
-      position:absolute;
-      top:50%; left:50%;
-      transform:translate(-50%,-50%);
-      width:80px; height:80px;
-      border-radius:50%;
-      background:var(--aqua);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      transition:transform .2s ease, opacity .3s ease;
-      z-index:5;
+    video {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      object-fit: cover;
     }
-    .play-overlay:hover{ transform:translate(-50%,-50%) scale(1.05); }
-    .play-overlay svg{
-      width:32px; height:32px;
-      fill:#fff;
-      margin-left:4px; /* center the triangle */
-    }
-    .play-overlay.hidden{ opacity:0; pointer-events:none; }
 
-    /* Button Dock */
-    .dock{
-      position:fixed;
-      left:0; right:0; bottom:0;
-      padding:12px var(--pad) calc(12px + env(safe-area-inset-bottom));
-      background:rgba(250,250,246,0.85);
-      backdrop-filter:saturate(120%) blur(8px);
-      -webkit-backdrop-filter:saturate(120%) blur(8px);
-      box-shadow:0 -6px 24px rgba(0,0,0,.15);
-      z-index:10;
+    /* Custom play button */
+    .play-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70px;
+      height: 70px;
+      background-color: #8fd6d6;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
-    .buttons{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:12px;
-      max-width:680px;
-      margin:0 auto;
-    }
-    .btn{
-      display:inline-block;
-      text-align:center;
-      padding:14px 18px;
-      border-radius:var(--radius);
-      text-decoration:none;
-      font-weight:700;
-      border:1px solid var(--aqua);
-      background:var(--aqua);
-      color:#000;
-      transition:transform .08s ease, filter .15s ease;
-    }
-    .btn:active{ transform:translateY(1px) }
-    .btn:hover{ filter:brightness(.95) }
-    .btn.primary{ background:var(--aqua); border-color:var(--aqua); color:#000 }
 
-    @media (min-width:900px){
-      .hero{ height:70vh; }
-      .dock{
-        position:static;
-        padding:24px var(--pad) 48px;
-        background:var(--bg);
-        box-shadow:none;
+    .play-button:hover {
+      background-color: #6bbfc0;
+    }
+
+    .play-button:before {
+      content: '';
+      display: block;
+      margin-left: 6px;
+      border-style: solid;
+      border-width: 13px 0 13px 22px;
+      border-color: transparent transparent transparent white;
+    }
+
+    /* Button styles */
+    .button-container {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: -6px;
+      max-width: 500px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      flex: 1 1 22%;
+      padding: 10px 0;
+      border-radius: 25px;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      color: #ffffff;
+      background-color: #8fd6d6;
+      transition: all 0.3s ease;
+      min-width: 80px;
+    }
+
+    .button:hover {
+      background-color: #6bbfc0;
+    }
+
+    a {
+      text-decoration: none;
+      flex: 1;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 480px) {
+      .button-container {
+        flex-wrap: wrap;
       }
-      .buttons{ gap:16px }
+      .button {
+        flex: 1 1 45%;
+        font-size: 15px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <section class="hero">
-    <div class="video-frame">
-      <!-- YouTube iframe without default controls -->
-      <iframe
-        id="player"
-        src="https://www.youtube.com/embed/NyOU0G-FLTc?rel=0&modestbranding=1&controls=0&showinfo=0&enablejsapi=1&playsinline=1"
-        allow="autoplay; encrypted-media"
-        allowfullscreen
-        title="Baby Shower Invite Video"
-      ></iframe>
-      <!-- Custom Play Button -->
-      <div class="play-overlay" id="customPlay">
-        <svg viewBox="0 0 24 24">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-      </div>
-    </div>
-  </section>
+  <div class="video-container">
+    <video id="inviteVideo" poster="f3994d9c-58f6-4b19-a3c2-01332a04c8c7.jpg">
+      <source src="invite.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="play-button" id="playButton"></div>
+  </div>
 
-  <div class="dock">
-    <nav class="buttons">
-      <a class="btn primary" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
-      <a class="btn" href="event.ics" download>Add to Calendar</a>
-      <a class="btn" href="https://www.babylist.com/list/sanjana-dube" target="_blank" rel="noopener">Registry</a>
-      <a class="btn" href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank" rel="noopener">Photo Gallery</a>
-    </nav>
+  <div class="button-container">
+    <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Sanjana+%26+Priyank+Baby+Shower&details=Join+us+to+celebrate!&dates=20250901T060000Z/20250901T090000Z&location=Melbourne" target="_blank">
+      <button class="button">Add to Calendar</button>
+    </a>
+    <a href="https://www.eventbrite.com/e/sanjana-priyank-baby-shower-tickets-123456" target="_blank">
+      <button class="button">RSVP</button>
+    </a>
+    <a href="https://www.myregistry.com/" target="_blank">
+      <button class="button">Registry</button>
+    </a>
+    <a href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank">
+      <button class="button">Photo Gallery</button>
+    </a>
   </div>
 
   <script>
-    // YouTube API Play Control
-    let player;
-    function onYouTubeIframeAPIReady(){
-      player = new YT.Player('player');
-    }
-    // Load YouTube API script
-    let tag=document.createElement('script');
-    tag.src="https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
+    const playButton = document.getElementById('playButton');
+    const video = document.getElementById('inviteVideo');
 
-    // Custom play overlay click
-    document.getElementById('customPlay').addEventListener('click', function(){
-      if(player && player.playVideo){
-        player.playVideo();
-        this.classList.add('hidden');
-      }
+    playButton.addEventListener('click', () => {
+      video.play();
+      playButton.style.display = 'none';
+    });
+
+    video.addEventListener('pause', () => {
+      playButton.style.display = 'flex';
+    });
+
+    video.addEventListener('play', () => {
+      playButton.style.display = 'none';
     });
   </script>
 
