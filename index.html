@@ -6,10 +6,7 @@
   <title>Baby Shower Invite — Sanjana & Family</title>
   <meta name="description" content="Watch the invite video and tap to RSVP, view the registry, photo gallery, and add to calendar."/>
 
-  <!-- Performance + fonts -->
-  <link rel="preconnect" href="https://www.youtube.com">
-  <link rel="preconnect" href="https://i.ytimg.com">
-  <link rel="preconnect" href="https://www.google.com">
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
 
   <style>
@@ -35,7 +32,7 @@
       overflow-x:hidden;
     }
 
-    /* tiny title badge */
+    /* tiny badge title */
     .badge{
       position:fixed; top:12px; left:12px; z-index:12;
       background:rgba(255,255,255,.7);
@@ -48,51 +45,36 @@
       user-select:none;
     }
 
-    /* ===== Fullscreen section ===== */
+    /* ===== Fullscreen video with true COVER (no letterbox) ===== */
     .hero{
       position:relative;
-      height:100vh;
+      height:100vh;              /* full device height */
       background:#000;
       overflow:hidden;
     }
-
     .video-frame{
       position:relative;
       width:100%;
       height:100%;
-      overflow:hidden;
+      overflow:hidden;           /* crop overflow to remove bars */
     }
-
-    /*
-      IMPORTANT: Keep the whole video visible on tall/portrait screens.
-      Default: fit WIDTH (contain) -> no cropping, may show slim bars top/bottom.
-      Wide screens: fit HEIGHT to avoid side bars.
-    */
+    /* Default: fit height then widen to 16:9 (177.78vh) and center */
     .video-frame iframe{
       position:absolute; top:50%; left:50%;
       transform:translate(-50%,-50%);
-      width:100vw;
-      height:56.25vw;             /* 100vw * 9/16 */
+      width:177.78vh;            /* 100vh * 16/9 */
+      height:100vh;
       border:0; background:#000; display:block;
     }
+    /* When screen is wider than 16:9, fit width then set height 56.25vw */
     @media (min-aspect-ratio: 16/9){
       .video-frame iframe{
-        width:177.78vh;           /* 100vh * 16/9 */
-        height:100vh;
+        width:100vw;
+        height:56.25vw;          /* 100vw * 9/16 */
       }
     }
 
-    /* subtle edge fade so any letterbox blends nicely */
-    .hero::after{
-      content:"";
-      position:absolute; inset:0; pointer-events:none;
-      background:
-        linear-gradient(to top, rgba(0,0,0,.18), transparent 20%),
-        linear-gradient(to bottom, rgba(0,0,0,.18), transparent 20%);
-      z-index:1;                   /* below overlay button */
-    }
-
-    /* custom aqua play button */
+    /* Custom aqua play button (pulsing) */
     .play-overlay{
       position:absolute;
       top:50%; left:50%;
@@ -112,7 +94,7 @@
       50%{ transform:translate(-50%,-50%) scale(1.06) }
     }
 
-    /* Floating dock */
+    /* Floating button dock (always visible on mobile) */
     .dock{
       position:fixed; left:0; right:0; bottom:0; z-index:10;
       padding:12px var(--pad) calc(12px + env(safe-area-inset-bottom));
@@ -146,19 +128,11 @@
       100%{ transform:translate(var(--x-end), calc(var(--y) + 140px)) rotate(320deg); opacity:.0 }
     }
 
-    /* Reduce motion accessibility */
-    @media (prefers-reduced-motion: reduce){
-      .play-overlay{ animation: none; }
-      .btn, .play-overlay{ transition: none; }
-      .confetti{ animation: none !important; display: none !important; }
-    }
-
-    /* Desktop: shorter hero, dock becomes static under it */
+    /* Desktop: video shorter, dock becomes static under it */
     @media (min-width:900px){
       .hero{ height:70vh; }
       .dock{ position:static; padding:28px var(--pad) 56px; }
       .badge{ top:16px; left:16px }
-      .hero::after{ background:none; } /* no fade needed on desktop */
     }
   </style>
 </head>
@@ -227,7 +201,7 @@
       if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
     });
 
-    // Confetti on RSVP (+ tiny haptic on supported devices)
+    // Confetti on RSVP
     const rsvpLink = document.querySelector('.btn.rsvp');
     const confettiLayer = document.getElementById('confetti');
 
@@ -253,11 +227,11 @@
     }
 
     rsvpLink.addEventListener('click', (e)=>{
-      if (navigator.vibrate) navigator.vibrate(8);
       const rect = e.target.getBoundingClientRect();
       const x = rect.left + rect.width/2;
       const y = rect.top + rect.height/2 + window.scrollY;
       burstConfetti(x, y);
+      // link opens in new tab from target=_blank
     });
   </script>
 
