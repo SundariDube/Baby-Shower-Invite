@@ -6,33 +6,15 @@
   <title>Baby Shower Invite — Sanjana & Family</title>
   <meta name="description" content="Watch the invite video and tap to RSVP, view the registry, photo gallery, and add to calendar."/>
   <style>
-    :root { --max: 980px; --pad: 16px; --radius: 14px; }
+    :root { --max: 980px; --pad: 16px; --radius: 999px; } /* pill radius */
 
     * { box-sizing: border-box; }
     html, body { height: 100%; }
     body {
       margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: #fff;
-      background: #0b0b0b;
-    }
-
-    /* Header/title above video so it never feels blank */
-    .header {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 20px var(--pad) 8px;
-      text-align: center;
-    }
-    .title {
-      font-weight: 800;
-      font-size: clamp(28px, 4.5vw, 42px);
-      margin: 8px 0 6px;
-    }
-    .tagline {
-      color: #cfcfcf;
-      margin: 0 0 8px;
-      font-size: clamp(14px, 2.5vw, 18px);
+      color: #000;
+      background: #fafaf6;
     }
 
     /* Full-screen-ish video area */
@@ -40,7 +22,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #000;
+      background: #000; /* keep video area black to frame it nicely */
     }
     .video-frame {
       width: 100%;
@@ -56,38 +38,35 @@
       display: block;
     }
 
-    /* Buttons / info area */
+    /* Buttons area */
     .cta {
       max-width: var(--max);
       margin: 0 auto;
-      padding: 16px var(--pad) 48px;
-      background: #0b0b0b;
-    }
-
-    .chips {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      justify-content: center;
-      margin: 6px 0 18px;
-    }
-    .chip {
-      background: #1c1c1c; color: #eee; border: 1px solid #2a2a2a;
-      padding: 8px 12px; border-radius: 999px; font-size: 14px; text-decoration: none;
+      padding: 24px var(--pad) 60px;
+      background: #fafaf6;
     }
 
     .buttons {
       display: grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 12px;
+      gap: 16px;
       max-width: 680px;
       margin: 0 auto;
     }
     .btn {
-      display: inline-block; text-align: center; padding: 14px 16px;
-      border-radius: var(--radius); text-decoration: none; font-weight: 700;
-      border: 1px solid #3a3a3a; background: #161616; color: #fff;
+      display: inline-block; 
+      text-align: center; 
+      padding: 14px 18px;
+      border-radius: var(--radius); /* pill buttons */
+      text-decoration: none; 
+      font-weight: 700;
+      border: 1px solid #87cdd6; 
+      background: #87cdd6; 
+      color: #000; 
+      transition: all 0.2s ease-in-out;
     }
-    .btn:hover { filter: brightness(1.08); }
-    .btn.primary { background: #3399ff; color: #fff; border-color: #3399ff; }
+    .btn:hover { filter: brightness(0.92); }
+    .btn.primary { background: #87cdd6; color: #000; border-color: #87cdd6; }
 
     /* Desktop: balanced height */
     @media (min-width: 900px) {
@@ -96,17 +75,11 @@
   </style>
 </head>
 <body>
-  <!-- Always-visible header -->
-  <header class="header">
-    <h1 class="title">Baby Shower Invite 🎉</h1>
-    <p class="tagline">Watch the video, then use the buttons below.</p>
-  </header>
-
-  <!-- Video -->
+  <!-- Video only -->
   <section class="hero">
     <div class="video-frame">
       <iframe
-        src="https://www.youtube.com/embed/NyOU0G-FLTc"
+        src="https://www.youtube.com/embed/NyOU0G-FLTc?rel=0&modestbranding=1&playsinline=1"
         allow="autoplay; encrypted-media"
         allowfullscreen
         title="Baby Shower Invite Video"
@@ -114,17 +87,8 @@
     </div>
   </section>
 
-  <!-- Buttons + info -->
+  <!-- Buttons only -->
   <section class="cta">
-    <div class="chips">
-      <span class="chip">September 27</span>
-      <span class="chip">4:00 PM Onwards</span>
-      <a class="chip" href="https://www.google.com/maps/search/?api=1&query=11030+Shy+Bird+Ln,+San+Diego,+CA+92128" 
-         target="_blank" rel="noopener">
-         11030 Shy Bird Ln, San Diego CA 92128
-      </a>
-    </div>
-
     <nav class="buttons">
       <a class="btn primary" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
       <a class="btn" href="event.ics" download>Add to Calendar</a>
