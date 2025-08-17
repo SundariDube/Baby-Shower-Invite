@@ -24,7 +24,7 @@
       overflow-x:hidden;
     }
 
-    /* Fullscreen video */
+    /* Fullscreen video behind the floating dock */
     .hero{
       position:relative;
       height:100vh;
@@ -34,8 +34,8 @@
       position:relative;
       width:100%;
       height:100%;
-      max-width:100%;
       margin:0 auto;
+      max-width:100%;
     }
     iframe{
       width:100%;
@@ -61,18 +61,20 @@
     .play-overlay svg{ width:34px; height:34px; fill:#fff; margin-left:4px; }
     .play-overlay.hidden{ opacity:0; pointer-events:none; }
 
-    /* Buttons (no background panel) */
-    .cta{
-      max-width:var(--max);
-      margin:0 auto;
-      padding:14px var(--pad) calc(20px + env(safe-area-inset-bottom));
-      background:transparent;      /* no board behind buttons */
+    /* ===== Floating button dock (always visible) ===== */
+    .dock{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      z-index:10;
+      padding:12px var(--pad) calc(12px + env(safe-area-inset-bottom));
+      background:transparent;       /* no panel behind buttons */
+      pointer-events:none;          /* so dock itself doesn't block video */
     }
     .buttons{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:center;
+      pointer-events:auto;          /* buttons are clickable */
+      display:flex; flex-wrap:wrap;
+      gap:10px; justify-content:center;
+      max-width:680px; margin:0 auto;
     }
     .btn{
       display:inline-block;
@@ -88,10 +90,14 @@
     .btn:hover{ filter:brightness(.95) }
     .btn:active{ transform:translateY(1px) }
 
-    /* Desktop: video shorter, buttons dock below naturally */
+    /* Desktop: shorten video and dock sits naturally below */
     @media (min-width:900px){
       .hero{ height:70vh; }
-      .cta{ padding:24px var(--pad) 48px; }
+      .dock{
+        position:static;
+        padding:24px var(--pad) 48px;
+      }
+      body{ overflow-y:auto; }
     }
   </style>
 </head>
@@ -100,7 +106,6 @@
   <!-- Video -->
   <section class="hero">
     <div class="video-frame">
-      <!-- YouTube embed with API enabled -->
       <iframe
         id="player"
         src="https://www.youtube.com/embed/NyOU0G-FLTc?enablejsapi=1&playsinline=1&modestbranding=1&rel=0&controls=1"
@@ -116,15 +121,15 @@
     </div>
   </section>
 
-  <!-- Buttons (no panel behind) -->
-  <section class="cta">
+  <!-- Floating buttons (no background board) -->
+  <div class="dock">
     <nav class="buttons">
       <a class="btn" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
       <a class="btn" href="event.ics" download>Add to Calendar</a>
       <a class="btn" href="https://www.babylist.com/list/sanjana-dube" target="_blank" rel="noopener">Registry</a>
       <a class="btn" href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank" rel="noopener">Photo Gallery</a>
     </nav>
-  </section>
+  </div>
 
   <script>
     // Load YouTube Iframe API
@@ -150,7 +155,7 @@
       });
     }
 
-    // Play when custom button tapped
+    // Tap to play via custom aqua button
     overlay.addEventListener('click', function(){
       if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
     });
