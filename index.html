@@ -5,26 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Baby Shower Invite — Sanjana & Family</title>
   <meta name="description" content="Watch the invite video and tap to RSVP, view the registry, photo gallery, and add to calendar."/>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
   <style>
     :root{
       --max:980px;
       --pad:16px;
       --radius:999px;
       --aqua:#87cdd6;
+      --aqua-dark:#6bbfc0;
       --bg:#fafaf6;
+      --ink:#0f1a1a;
     }
 
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:#000;
-      background:var(--bg);
+      font-family: 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1000px 600px at 20% -10%, rgba(135,205,214,.18), transparent 60%),
+        radial-gradient(800px 500px at 110% -10%, rgba(135,205,214,.12), transparent 60%),
+        var(--bg);
       overflow-x:hidden;
     }
 
-    /* Fullscreen video behind the floating dock */
+    /* optional tiny badge title (very subtle) */
+    .badge{
+      position:fixed; top:12px; left:12px; z-index:12;
+      background:rgba(255,255,255,.7);
+      border:1px solid rgba(0,0,0,.06);
+      padding:6px 12px; border-radius:14px;
+      font-family:'Pacifico', cursive; letter-spacing:.2px;
+      color:#1d3b3b; font-size:16px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      user-select:none;
+    }
+
+    /* Fullscreen video */
     .hero{
       position:relative;
       height:100vh;
@@ -45,36 +65,41 @@
       display:block;
     }
 
-    /* Custom aqua play button */
+    /* Custom aqua play button (pulsing) */
     .play-overlay{
       position:absolute;
       top:50%; left:50%;
       transform:translate(-50%,-50%);
-      width:80px; height:80px;
+      width:86px; height:86px;
       border-radius:50%;
       background:var(--aqua);
       display:flex; align-items:center; justify-content:center;
       cursor:pointer; z-index:5;
-      transition:transform .2s ease, opacity .3s ease;
+      box-shadow:0 10px 24px rgba(0,0,0,.18);
+      animation:pulse 2.2s ease-in-out infinite;
     }
-    .play-overlay:hover{ transform:translate(-50%,-50%) scale(1.06); }
-    .play-overlay svg{ width:34px; height:34px; fill:#fff; margin-left:4px; }
+    .play-overlay svg{ width:36px; height:36px; fill:#fff; margin-left:4px; }
     .play-overlay.hidden{ opacity:0; pointer-events:none; }
 
-    /* ===== Floating button dock (always visible) ===== */
+    @keyframes pulse{
+      0%,100%{ transform:translate(-50%,-50%) scale(1) }
+      50%{ transform:translate(-50%,-50%) scale(1.06) }
+    }
+
+    /* Floating button dock */
     .dock{
       position:fixed;
       left:0; right:0; bottom:0;
       z-index:10;
       padding:12px var(--pad) calc(12px + env(safe-area-inset-bottom));
       background:transparent;       /* no panel behind buttons */
-      pointer-events:none;          /* so dock itself doesn't block video */
+      pointer-events:none;          /* dock doesn't block video */
     }
     .buttons{
       pointer-events:auto;          /* buttons are clickable */
       display:flex; flex-wrap:wrap;
       gap:10px; justify-content:center;
-      max-width:680px; margin:0 auto;
+      max-width:720px; margin:0 auto;
     }
     .btn{
       display:inline-block;
@@ -85,23 +110,41 @@
       border:none;
       background:var(--aqua);
       color:#000;
-      transition:filter .15s ease, transform .08s ease;
+      transition:filter .15s ease, transform .08s ease, box-shadow .2s ease;
+      box-shadow:0 6px 14px rgba(0,0,0,.08);
     }
-    .btn:hover{ filter:brightness(.95) }
+    .btn:hover{ filter:brightness(.97); box-shadow:0 8px 18px rgba(0,0,0,.12) }
     .btn:active{ transform:translateY(1px) }
 
-    /* Desktop: shorten video and dock sits naturally below */
+    /* Confetti layer */
+    .confetti-layer{
+      position:fixed; inset:0; pointer-events:none; z-index:20; overflow:hidden;
+    }
+    .confetti{
+      position:absolute; width:8px; height:14px; border-radius:2px; opacity:.95;
+      transform:translate(-50%,-50%) rotate(0deg);
+      animation:fall 1000ms linear forwards;
+    }
+    @keyframes fall{
+      0%{ transform:translate(var(--x), var(--y)) rotate(0deg) }
+      100%{ transform:translate(var(--x-end), calc(var(--y) + 140px)) rotate(320deg); opacity:.0 }
+    }
+
+    /* Desktop: shorten video so dock becomes natural section */
     @media (min-width:900px){
       .hero{ height:70vh; }
       .dock{
         position:static;
-        padding:24px var(--pad) 48px;
+        padding:28px var(--pad) 56px;
       }
-      body{ overflow-y:auto; }
+      .badge{ top:16px; left:16px }
     }
   </style>
 </head>
 <body>
+
+  <!-- tiny tasteful title badge -->
+  <div class="badge">Sanjana &amp; Priyank</div>
 
   <!-- Video -->
   <section class="hero">
@@ -121,15 +164,18 @@
     </div>
   </section>
 
-  <!-- Floating buttons (no background board) -->
+  <!-- Floating buttons -->
   <div class="dock">
     <nav class="buttons">
-      <a class="btn" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
+      <a class="btn rsvp" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
       <a class="btn" href="event.ics" download>Add to Calendar</a>
       <a class="btn" href="https://www.babylist.com/list/sanjana-dube" target="_blank" rel="noopener">Registry</a>
       <a class="btn" href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank" rel="noopener">Photo Gallery</a>
     </nav>
   </div>
+
+  <!-- Confetti container -->
+  <div class="confetti-layer" id="confetti"></div>
 
   <script>
     // Load YouTube Iframe API
@@ -158,6 +204,41 @@
     // Tap to play via custom aqua button
     overlay.addEventListener('click', function(){
       if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
+    });
+
+    // ---------- Confetti on RSVP ----------
+    const rsvpLink = document.querySelector('.btn.rsvp');
+    const confettiLayer = document.getElementById('confetti');
+
+    function burstConfetti(x, y){
+      const colors = ['#87cdd6','#ffd4d4','#ffe29a','#c9e7ff','#d9c7ff','#ffb6c1'];
+      const pieces = 60;
+
+      for(let i=0;i<pieces;i++){
+        const el = document.createElement('div');
+        el.className = 'confetti';
+        const size = 6 + Math.random()*6;
+        el.style.width = size + 'px';
+        el.style.height = (size + 4) + 'px';
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        const startX = x + (Math.random()*120 - 60);
+        const startY = y + (Math.random()*40 - 20);
+        const endX = startX + (Math.random()*120 - 60);
+        el.style.setProperty('--x', startX + 'px');
+        el.style.setProperty('--y', startY + 'px');
+        el.style.setProperty('--x-end', endX + 'px');
+        confettiLayer.appendChild(el);
+        setTimeout(()=> el.remove(), 1100);
+      }
+    }
+
+    rsvpLink.addEventListener('click', (e)=>{
+      // screen coords
+      const rect = e.target.getBoundingClientRect();
+      const x = rect.left + rect.width/2;
+      const y = rect.top + rect.height/2 + window.scrollY;
+      burstConfetti(x, y);
+      // let the normal navigation happen (target=_blank)
     });
   </script>
 
