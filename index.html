@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Baby Shower Invite — Sanjana & Family</title>
   <meta name="description" content="Watch the invite video and tap to RSVP, view the registry, photo gallery, and add to calendar."/>
+
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+
   <style>
     :root{
       --max:980px;
       --pad:16px;
       --radius:999px;
       --aqua:#87cdd6;
-      --aqua-dark:#6bbfc0;
       --bg:#fafaf6;
       --ink:#0f1a1a;
     }
@@ -22,7 +23,7 @@
     html,body{height:100%}
     body{
       margin:0;
-      font-family: 'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family:'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--ink);
       background:
         radial-gradient(1000px 600px at 20% -10%, rgba(135,205,214,.18), transparent 60%),
@@ -31,38 +32,46 @@
       overflow-x:hidden;
     }
 
-    /* optional tiny badge title (very subtle) */
+    /* tiny badge title */
     .badge{
       position:fixed; top:12px; left:12px; z-index:12;
       background:rgba(255,255,255,.7);
       border:1px solid rgba(0,0,0,.06);
       padding:6px 12px; border-radius:14px;
-      font-family:'Pacifico', cursive; letter-spacing:.2px;
+      font-family:'Pacifico',cursive; letter-spacing:.2px;
       color:#1d3b3b; font-size:16px;
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
       user-select:none;
     }
 
-    /* Fullscreen video */
+    /* ===== Fullscreen video with true COVER (no letterbox) ===== */
     .hero{
       position:relative;
-      height:100vh;
+      height:100vh;              /* full device height */
       background:#000;
+      overflow:hidden;
     }
     .video-frame{
       position:relative;
       width:100%;
       height:100%;
-      margin:0 auto;
-      max-width:100%;
+      overflow:hidden;           /* crop overflow to remove bars */
     }
-    iframe{
-      width:100%;
-      height:100%;
-      border:0;
-      background:#000;
-      display:block;
+    /* Default: fit height then widen to 16:9 (177.78vh) and center */
+    .video-frame iframe{
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      width:177.78vh;            /* 100vh * 16/9 */
+      height:100vh;
+      border:0; background:#000; display:block;
+    }
+    /* When screen is wider than 16:9, fit width then set height 56.25vw */
+    @media (min-aspect-ratio: 16/9){
+      .video-frame iframe{
+        width:100vw;
+        height:56.25vw;          /* 100vw * 9/16 */
+      }
     }
 
     /* Custom aqua play button (pulsing) */
@@ -80,36 +89,27 @@
     }
     .play-overlay svg{ width:36px; height:36px; fill:#fff; margin-left:4px; }
     .play-overlay.hidden{ opacity:0; pointer-events:none; }
-
     @keyframes pulse{
       0%,100%{ transform:translate(-50%,-50%) scale(1) }
       50%{ transform:translate(-50%,-50%) scale(1.06) }
     }
 
-    /* Floating button dock */
+    /* Floating button dock (always visible on mobile) */
     .dock{
-      position:fixed;
-      left:0; right:0; bottom:0;
-      z-index:10;
+      position:fixed; left:0; right:0; bottom:0; z-index:10;
       padding:12px var(--pad) calc(12px + env(safe-area-inset-bottom));
-      background:transparent;       /* no panel behind buttons */
-      pointer-events:none;          /* dock doesn't block video */
+      background:transparent;
+      pointer-events:none;
     }
     .buttons{
-      pointer-events:auto;          /* buttons are clickable */
-      display:flex; flex-wrap:wrap;
-      gap:10px; justify-content:center;
+      pointer-events:auto;
+      display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
       max-width:720px; margin:0 auto;
     }
     .btn{
-      display:inline-block;
-      padding:12px 18px;
-      border-radius:var(--radius);
-      text-decoration:none;
-      font-weight:700;
-      border:none;
-      background:var(--aqua);
-      color:#000;
+      display:inline-block; padding:12px 18px;
+      border-radius:var(--radius); text-decoration:none; font-weight:700;
+      border:none; background:var(--aqua); color:#000;
       transition:filter .15s ease, transform .08s ease, box-shadow .2s ease;
       box-shadow:0 6px 14px rgba(0,0,0,.08);
     }
@@ -117,9 +117,7 @@
     .btn:active{ transform:translateY(1px) }
 
     /* Confetti layer */
-    .confetti-layer{
-      position:fixed; inset:0; pointer-events:none; z-index:20; overflow:hidden;
-    }
+    .confetti-layer{ position:fixed; inset:0; pointer-events:none; z-index:20; overflow:hidden; }
     .confetti{
       position:absolute; width:8px; height:14px; border-radius:2px; opacity:.95;
       transform:translate(-50%,-50%) rotate(0deg);
@@ -130,20 +128,17 @@
       100%{ transform:translate(var(--x-end), calc(var(--y) + 140px)) rotate(320deg); opacity:.0 }
     }
 
-    /* Desktop: shorten video so dock becomes natural section */
+    /* Desktop: video shorter, dock becomes static under it */
     @media (min-width:900px){
       .hero{ height:70vh; }
-      .dock{
-        position:static;
-        padding:28px var(--pad) 56px;
-      }
+      .dock{ position:static; padding:28px var(--pad) 56px; }
       .badge{ top:16px; left:16px }
     }
   </style>
 </head>
 <body>
 
-  <!-- tiny tasteful title badge -->
+  <!-- tiny title badge -->
   <div class="badge">Sanjana &amp; Priyank</div>
 
   <!-- Video -->
@@ -157,7 +152,7 @@
         title="Baby Shower Invite Video"
       ></iframe>
 
-      <!-- Custom aqua play button -->
+      <!-- Aqua play button -->
       <div class="play-overlay" id="customPlay" aria-label="Play video">
         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       </div>
@@ -201,19 +196,18 @@
       });
     }
 
-    // Tap to play via custom aqua button
+    // Play via custom button
     overlay.addEventListener('click', function(){
       if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
     });
 
-    // ---------- Confetti on RSVP ----------
+    // Confetti on RSVP
     const rsvpLink = document.querySelector('.btn.rsvp');
     const confettiLayer = document.getElementById('confetti');
 
     function burstConfetti(x, y){
       const colors = ['#87cdd6','#ffd4d4','#ffe29a','#c9e7ff','#d9c7ff','#ffb6c1'];
       const pieces = 60;
-
       for(let i=0;i<pieces;i++){
         const el = document.createElement('div');
         el.className = 'confetti';
@@ -233,12 +227,11 @@
     }
 
     rsvpLink.addEventListener('click', (e)=>{
-      // screen coords
       const rect = e.target.getBoundingClientRect();
       const x = rect.left + rect.width/2;
       const y = rect.top + rect.height/2 + window.scrollY;
       burstConfetti(x, y);
-      // let the normal navigation happen (target=_blank)
+      // link opens in new tab from target=_blank
     });
   </script>
 
