@@ -8,7 +8,7 @@
 
   <style>
     :root{
-      --pill:#2a4b4b;          /* watermark text */
+      --pill:#2a4b4b;          /* watermark text color */
       --btn:#87cdd6;           /* button fill */
       --btnText:#0b2b2b;       /* button text */
       --shadow:0 10px 30px rgba(0,0,0,.25);
@@ -33,7 +33,7 @@
     .cover iframe{
       position:absolute; top:50%; left:50%;
       width:100vw; height:100vh;
-      transform:translate(-50%, -50%) scale(1.06); /* tiny zoom to ensure no letterboxing */
+      transform:translate(-50%, -50%) scale(1.06); /* tiny zoom to avoid any letterboxing */
       border:0; margin:0; padding:0;
     }
 
@@ -70,7 +70,7 @@
     }
     .btn:active{ transform: scale(.98); filter: brightness(.98); }
 
-    /* keep layout compact on very small phones */
+    /* compact on very small phones */
     @media (max-height: 680px){
       .btn{ padding:12px 14px; font-size:15px }
       .dock{ gap:12px; padding:14px 12px calc(var(--safe-bot) + 6px)}
@@ -81,27 +81,28 @@
     @media (min-width: 820px){
       .cover iframe{ transform:translate(-50%, -50%) scale(1.02); }
       .dock{ max-width: 840px; margin: 0 auto; }
-      .watermark{ left: 50%; transform: translateX(-400px); } /* keeps it near left edge on wide screens */
+      .watermark{ left: 50%; transform: translateX(-400px); }
     }
   </style>
 </head>
 
 <body>
-  <!-- FULLSCREEN CANVA VIDEO -->
+  <!-- FULLSCREEN CANVA PRESENTATION/VIDEO (all slides) -->
   <div class="stage" aria-hidden="true">
     <div class="cover">
-      <!-- Your Canva embed (made full-screen & borderless) -->
+      <!-- Use watch mode so it plays the full multi-page design.
+           Autoplay + loop + muted help it start on mobile. -->
       <iframe
         loading="lazy"
-        src="https://www.canva.com/design/DAGtZY5e1BI/M9iXvFDb_nxo11MmJyqWlg/view?embed"
-        allowfullscreen
-        allow="fullscreen">
+        src="https://www.canva.com/design/DAGtZY5e1BI/watch?embed&autoplay=1&loop=1&muted=1"
+        allow="autoplay; fullscreen"
+        allowfullscreen>
       </iframe>
     </div>
   </div>
 
-  <!-- WATERMARK (spelling fixed) -->
-  <div class="watermark">Sanjana &amp; Priyank</div>
+  <!-- WATERMARK (spelling corrected to Pryank) -->
+  <div class="watermark">Sanjana &amp; Pryank</div>
 
   <!-- BOTTOM BUTTONS: Row 1 (RSVP + Add to Calendar), Row 2 (Registry + Photo Gallery) -->
   <nav class="dock" aria-label="Actions">
