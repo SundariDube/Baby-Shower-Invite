@@ -2,133 +2,113 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Baby Shower Invite — Sanjana &amp; Family</title>
-  <meta name="description" content="Watch the invite video and tap to RSVP, add to calendar, view the registry, and photo gallery."/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Baby Shower Invite — Sanjana & Family</title>
+  <meta name="description" content="Watch the invite and tap to RSVP, add to calendar, view the registry, or open the photo gallery." />
+
   <style>
     :root{
-      --brand:#87cdd6;        /* aqua */
-      --text:#0e2b2d;         /* deep teal for labels */
-      --btn-bg:#87cdd6;
-      --btn-text:#0e2b2d;
-      --btn-shadow:0 8px 18px rgba(0,0,0,.12);
-      --radius:22px;
+      --pill:#2a4b4b;          /* watermark text */
+      --btn:#87cdd6;           /* button fill */
+      --btnText:#0b2b2b;       /* button text */
+      --shadow:0 10px 30px rgba(0,0,0,.25);
+      --gap:14px;
+      --radius:28px;
+      --safe-bot: max(16px, env(safe-area-inset-bottom));
+      --safe-top: max(12px, env(safe-area-inset-top));
     }
+
     *{box-sizing:border-box}
     html,body{height:100%;margin:0}
-    body{
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--text);
-      background: radial-gradient(120% 120% at 50% 0%, #eaf7f7 0%, #cfeeed 40%, #b6e2e6 100%);
-      overflow:hidden; /* never scroll */
-    }
+    body{background:#000; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; overflow:hidden;}
 
-    /* Watermark (top-left) */
-    .tag{
-      position:fixed; z-index:20;
-      top:calc(env(safe-area-inset-top,0) + 12px); left:12px;
-      background:#ecf6f6cc; backdrop-filter: blur(6px);
-      border:1px solid #d8eeee; color:#234a4d;
-      padding:10px 16px; border-radius:16px; font-weight:700;
+    /* ===== Fullscreen Canva embed ===== */
+    .stage{
+      position:fixed; inset:0; z-index:0; overflow:hidden;
+      background:#000;
     }
-
-    /* Full-screen hero */
-    .hero{
-      position:fixed; inset:0; z-index:1;
-      /* soft ocean tint behind the player */
-      background: radial-gradient(140% 100% at 50% -10%, #eaf7f7 0%, #cfeeed 45%, #b6e2e6 100%);
+    .cover{
+      position:absolute; inset:0; width:100vw; height:100vh; overflow:hidden;
     }
-    .player-wrap{
-      position:absolute; inset:0; overflow:hidden;
-      /* centers the iframe */
-      display:grid; place-items:center;
-    }
-    /* Full-bleed iframe sizing that respects orientation & iOS toolbars */
-    .player{
+    .cover iframe{
       position:absolute; top:50%; left:50%;
-      transform:translate(-50%,-50%);
-      border:0; display:block;
-      /* Landscape default (16:9) */
-      width:100vw; height:56.25vw;
-    }
-    @media (orientation:portrait){
-      /* Make the PLAYER itself fill the screen height; YouTube may still show thin side bands internally */
-      .player{ width:177.78svh; height:100svh; } /* 16/9 * height */
+      width:100vw; height:100vh;
+      transform:translate(-50%, -50%) scale(1.06); /* tiny zoom to ensure no letterboxing */
+      border:0; margin:0; padding:0;
     }
 
-    /* Custom play overlay (sits above YouTube UI) */
-    .play-overlay{
-      position:absolute; inset:0; display:grid; place-items:center;
-      pointer-events:none; /* clicks pass through */
-    }
-    .play-overlay .blob{
-      width:min(22svh,120px); aspect-ratio:1/1;
-      border-radius:50%;
-      background:var(--brand);
-      box-shadow:0 6px 24px rgba(0,0,0,.18);
-      display:grid; place-items:center;
-      opacity:.95;
-    }
-    .play-overlay .blob:after{
-      content:"";
-      border-left: calc(min(22svh,120px) * .24) solid #fff;
-      border-top:  calc(min(22svh,120px) * .14) solid transparent;
-      border-bottom: calc(min(22svh,120px) * .14) solid transparent;
-      margin-left: calc(min(22svh,120px) * .06);
+    /* ===== Top watermark ===== */
+    .watermark{
+      position:fixed; top:var(--safe-top); left:16px; z-index:2;
+      background:rgba(255,255,255,.85);
+      color:var(--pill);
+      padding:10px 16px; border-radius:16px;
+      font-weight:700; letter-spacing:.2px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
     }
 
-    /* Buttons dock */
+    /* ===== Bottom button dock (2 rows) ===== */
     .dock{
-      position:fixed; z-index:15; left:0; right:0;
-      bottom: max(12px, env(safe-area-inset-bottom,0) + 8px);
-      display:grid; gap:10px;
+      position:fixed; inset-inline:0; bottom:0; z-index:2;
+      display:grid; gap:var(--gap);
       grid-template-columns: repeat(2, minmax(0,1fr));
-      padding:0 12px;
+      padding:20px 16px calc(var(--safe-bot) + 8px);
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 35%, rgba(0,0,0,.55) 100%);
     }
     .btn{
-      appearance:none; border:0; cursor:pointer;
-      background:var(--btn-bg); color:var(--btn-text);
-      padding:14px 12px; border-radius:var(--radius);
-      font-weight:800; font-size:16px; text-align:center;
-      box-shadow:var(--btn-shadow);
-      text-decoration:none; display:block;
+      display:flex; align-items:center; justify-content:center;
+      padding:14px 16px;
+      border-radius: var(--radius);
+      background: var(--btn);
+      color: var(--btnText);
+      text-decoration:none; font-weight:800; font-size:16px;
+      box-shadow: var(--shadow);
+      border:1px solid rgba(255,255,255,.35);
+      transition: transform .08s ease, filter .12s ease;
+      -webkit-tap-highlight-color: transparent;
     }
-    .btn:active{ transform:translateY(1px); filter:brightness(.98); }
+    .btn:active{ transform: scale(.98); filter: brightness(.98); }
 
-    /* Tiny helper for very short screens so buttons don’t collide with player controls */
-    @media (max-height:560px){
-      .btn{ padding:12px 10px; font-size:15px }
+    /* keep layout compact on very small phones */
+    @media (max-height: 680px){
+      .btn{ padding:12px 14px; font-size:15px }
+      .dock{ gap:12px; padding:14px 12px calc(var(--safe-bot) + 6px)}
+      .watermark{ font-size:14px; padding:8px 12px }
+    }
+
+    /* desktop/tablet: slightly reduce zoom so more of the artwork shows */
+    @media (min-width: 820px){
+      .cover iframe{ transform:translate(-50%, -50%) scale(1.02); }
+      .dock{ max-width: 840px; margin: 0 auto; }
+      .watermark{ left: 50%; transform: translateX(-400px); } /* keeps it near left edge on wide screens */
     }
   </style>
 </head>
+
 <body>
-  <!-- Watermark -->
-  <div class="tag">Sanjana &amp; Priyank</div>
-
-  <!-- Full-screen video -->
-  <section class="hero" aria-label="Invite video">
-    <div class="player-wrap">
-      <!-- The iframe is sized to fill the viewport (see CSS above) -->
+  <!-- FULLSCREEN CANVA VIDEO -->
+  <div class="stage" aria-hidden="true">
+    <div class="cover">
+      <!-- Your Canva embed (made full-screen & borderless) -->
       <iframe
-        class="player"
-        src="https://www.youtube.com/embed/NyOU0G-FLTc?rel=0&modestbranding=1&playsinline=1&fs=1&color=white"
-        title="Baby Shower Invite Video"
-        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"
+        src="https://www.canva.com/design/DAGtZY5e1BI/M9iXvFDb_nxo11MmJyqWlg/view?embed"
         allowfullscreen
-      ></iframe>
-
-      <!-- Aqua play dot (covers the default red button visually) -->
-      <div class="play-overlay" aria-hidden="true">
-        <div class="blob"></div>
-      </div>
+        allow="fullscreen">
+      </iframe>
     </div>
-  </section>
+  </div>
 
-  <!-- Button dock (two rows) -->
+  <!-- WATERMARK (spelling fixed) -->
+  <div class="watermark">Sanjana &amp; Priyank</div>
+
+  <!-- BOTTOM BUTTONS: Row 1 (RSVP + Add to Calendar), Row 2 (Registry + Photo Gallery) -->
   <nav class="dock" aria-label="Actions">
     <!-- Row 1 -->
     <a class="btn" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
     <a class="btn" href="event.ics" download>Add to Calendar</a>
+
     <!-- Row 2 -->
     <a class="btn" href="https://www.babylist.com/list/sanjana-dube" target="_blank" rel="noopener">Registry</a>
     <a class="btn" href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank" rel="noopener">Photo Gallery</a>
