@@ -12,23 +12,23 @@
       --safe: env(safe-area-inset-bottom, 0px);
     }
 
-    /* Reset + base */
+    /* Base / reset */
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
     body { background: #000; color: #111; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
 
-    /* Full-screen hero */
+    /* Full-screen stage */
     .hero {
       position: relative;
       width: 100vw;
-      height: 100svh;              /* iOS friendly viewport */
+      height: 100svh;                 /* iOS-friendly viewport */
       overflow: hidden;
       background: #000;
       touch-action: manipulation;
     }
 
-    /* Make the Canva iframe fill the viewport */
-    .hero iframe {
+    /* YouTube iframe fills the viewport */
+    #player {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -39,33 +39,30 @@
 
     /* Watermark pill */
     .mark {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      z-index: 10;
+      position: absolute; z-index: 10;
+      top: 16px; left: 16px;
       padding: 10px 16px;
       border-radius: 14px;
       background: var(--pill-bg);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      font-weight: 800;
-      color: #22423f;
+      font-weight: 800; color: #22423f;
       box-shadow: 0 8px 24px rgba(0,0,0,.18);
+      user-select: none;
     }
 
-    /* Buttons overlay (2×2 grid) */
+    /* Buttons (always two rows, two columns) */
     .cta {
-      position: absolute;
+      position: absolute; z-index: 10;
       left: 0; right: 0; bottom: max(14px, var(--safe));
-      z-index: 10;
       padding: 0 16px;
       display: grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
       gap: 14px;
       justify-content: center;
       align-items: center;
+      transition: opacity .25s ease;
     }
-
     .btn {
       display: inline-block;
       text-align: center;
@@ -76,14 +73,45 @@
       background: var(--teal);
       color: #08272b;
       box-shadow: 0 10px 26px rgba(0,0,0,.22);
-      transition: transform .08s ease, filter .15s ease, background .15s ease;
-      user-select: none;
+      transition: transform .08s ease, background .15s ease, filter .15s ease;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
     .btn:active { transform: translateY(1px) scale(.99); }
     .btn:hover { background: var(--teal-hover); }
 
-    /* Keep grid tidy on very narrow screens */
+    /* Big center play (custom teal) */
+    .play {
+      position: absolute; z-index: 11;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: auto;
+      transition: opacity .25s ease, visibility .25s ease;
+    }
+    .play-btn {
+      width: clamp(88px, 24vw, 140px);
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 12px 32px rgba(0,0,0,.35);
+      display: grid; place-items: center;
+    }
+    .play-tri {
+      width: 0; height: 0;
+      border-left: clamp(18px, 5vw, 28px) solid #083039;
+      border-top: clamp(12px, 3.2vw, 18px) solid transparent;
+      border-bottom: clamp(12px, 3.2vw, 18px) solid transparent;
+      margin-left: clamp(4px, 1vw, 8px);
+    }
+
+    /* Hidden state when playing */
+    .hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
     @media (max-width: 360px) {
       .btn { font-size: 15px; padding: 12px 12px; }
     }
@@ -92,30 +120,79 @@
 <body>
 
   <section class="hero" aria-label="Invite video">
-
-    <!-- Watermark (spelling fixed) -->
+    <!-- Watermark (correct spelling) -->
     <div class="mark">Sanjana &amp; Pryank</div>
 
-    <!-- Canva embed (full-viewport iframe) -->
-    <iframe
-      src="https://www.canva.com/design/DAGtZY5e1BI/M9iXvFDb_nxo11MmJyqWlg/view?embed"
-      loading="lazy"
-      allowfullscreen
-      allow="fullscreen"
-      title="Invite video from Canva">
-    </iframe>
+    <!-- YouTube player -->
+    <div id="player"></div>
 
-    <!-- Buttons – exactly two per row -->
-    <nav class="cta" aria-label="Invite actions">
-      <!-- Row 1 -->
+    <!-- Custom center play (teal) -->
+    <div class="play" id="playOverlay" role="button" aria-label="Play video">
+      <div class="play-btn"><div class="play-tri"></div></div>
+    </div>
+
+    <!-- Buttons overlay: row1 (RSVP + Add), row2 (Registry + Gallery) -->
+    <nav class="cta" id="cta" aria-label="Invite actions">
       <a class="btn" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
       <a class="btn" href="event.ics" download>Add to Calendar</a>
-      <!-- Row 2 -->
       <a class="btn" href="https://www.babylist.com/list/sanjana-dube" target="_blank" rel="noopener">Registry</a>
       <a class="btn" href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank" rel="noopener">Photo Gallery</a>
     </nav>
-
   </section>
 
+  <!-- YouTube IFrame API -->
+  <script>
+    // Load the API
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    const VIDEO_ID = "AYPs8Yv30Vw"; // your new YouTube video (Shorts) ID
+    let player;
+
+    // Called by YT API
+    window.onYouTubeIframeAPIReady = function () {
+      player = new YT.Player('player', {
+        videoId: VIDEO_ID,
+        playerVars: {
+          playsinline: 1,
+          modestbranding: 1,
+          rel: 0,
+          controls: 0,          // minimal chrome
+          iv_load_policy: 3,
+          fs: 0,
+          enablejsapi: 1
+        },
+        events: {
+          'onReady': onReady,
+          'onStateChange': onState
+        }
+      });
+    };
+
+    const playOverlay = document.getElementById('playOverlay');
+    const cta = document.getElementById('cta');
+
+    function onReady() {
+      // Start only when user taps our custom play
+      playOverlay.addEventListener('click', () => {
+        try { player.playVideo(); } catch(e) {}
+        playOverlay.classList.add('hide');
+        cta.classList.add('hide');     // hide buttons while playing
+      }, { passive: true });
+    }
+
+    function onState(e) {
+      // YT.PlayerState: -1 unstarted, 0 ended, 1 playing, 2 paused, 3 buffering
+      if (e.data === YT.PlayerState.PLAYING) {
+        playOverlay.classList.add('hide');
+        cta.classList.add('hide');
+      } else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) {
+        // show buttons again when user pauses or video ends
+        cta.classList.remove('hide');
+        playOverlay.classList.remove('hide');
+      }
+    }
+  </script>
 </body>
 </html>
