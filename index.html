@@ -1,92 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sanjana & Pryank</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sanjana & Pryank — Baby Shower Invite</title>
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #ffffff;
-      text-align: center;
-      color: #333;
+    :root {
+      --teal: #87cdd6;
+      --teal-hover: #6ec0ca;
+      --pill-bg: rgba(255,255,255,.85);
+      --safe: env(safe-area-inset-bottom, 0px);
     }
-    header {
-      background: #f7f7f7;
-      padding: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+    /* Reset + base */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body { background: #000; color: #111; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+
+    /* Full-screen hero */
+    .hero {
+      position: relative;
+      width: 100vw;
+      height: 100svh;              /* iOS friendly viewport */
+      overflow: hidden;
+      background: #000;
+      touch-action: manipulation;
     }
-    header h1 {
-      font-size: 24px;
-      margin: 0;
-      font-weight: bold;
-      color: #1a1a1a;
+
+    /* Make the Canva iframe fill the viewport */
+    .hero iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
     }
-    .video-container {
-      margin: 30px auto;
-      max-width: 600px;
+
+    /* Watermark pill */
+    .mark {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 10;
+      padding: 10px 16px;
+      border-radius: 14px;
+      background: var(--pill-bg);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      font-weight: 800;
+      color: #22423f;
+      box-shadow: 0 8px 24px rgba(0,0,0,.18);
     }
-    .buttons {
-      margin: 30px auto;
-      display: flex;
+
+    /* Buttons overlay (2×2 grid) */
+    .cta {
+      position: absolute;
+      left: 0; right: 0; bottom: max(14px, var(--safe));
+      z-index: 10;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
       justify-content: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      max-width: 600px;
+      align-items: center;
     }
-    .buttons a {
-      background: #6ec8d9;
-      color: black;
+
+    .btn {
+      display: inline-block;
+      text-align: center;
       text-decoration: none;
-      padding: 12px 22px;
-      border-radius: 20px;
-      font-weight: bold;
-      transition: background 0.3s;
+      font-weight: 800;
+      padding: 14px 16px;
+      border-radius: 22px;
+      background: var(--teal);
+      color: #08272b;
+      box-shadow: 0 10px 26px rgba(0,0,0,.22);
+      transition: transform .08s ease, filter .15s ease, background .15s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
-    .buttons a:hover {
-      background: #4db6c6;
-    }
-    footer {
-      margin-top: 40px;
-      font-size: 14px;
-      color: #888;
+    .btn:active { transform: translateY(1px) scale(.99); }
+    .btn:hover { background: var(--teal-hover); }
+
+    /* Keep grid tidy on very narrow screens */
+    @media (max-width: 360px) {
+      .btn { font-size: 15px; padding: 12px 12px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <h1>Sanjana & Pryank</h1>
-  </header>
+  <section class="hero" aria-label="Invite video">
 
-  <!-- Canva Video Embed -->
-  <div class="video-container">
-    <div style="position: relative; width: 100%; height: 0; padding-top: 141.4286%;
-      padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em;
-      margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
-      <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0;
-        left: 0; border: none; padding: 0;margin: 0;"
-        src="https://www.canva.com/design/DAGtZY5e1BI/M9iXvFDb_nxo11MmJyqWlg/view?embed"
-        allowfullscreen="allowfullscreen" allow="fullscreen">
-      </iframe>
-    </div>
-  </div>
+    <!-- Watermark (spelling fixed) -->
+    <div class="mark">Sanjana &amp; Pryank</div>
 
-  <!-- Buttons -->
-  <div class="buttons">
-    <a href="#">RSVP</a>
-    <a href="#">Add to Calendar</a>
-    <a href="#">Registry</a>
-    <a href="#">Photo Gallery</a>
-  </div>
+    <!-- Canva embed (full-viewport iframe) -->
+    <iframe
+      src="https://www.canva.com/design/DAGtZY5e1BI/M9iXvFDb_nxo11MmJyqWlg/view?embed"
+      loading="lazy"
+      allowfullscreen
+      allow="fullscreen"
+      title="Invite video from Canva">
+    </iframe>
 
-  <!-- Footer -->
-  <footer>
-    <p>Made with love for Sanjana & Pryank 💕</p>
-  </footer>
+    <!-- Buttons – exactly two per row -->
+    <nav class="cta" aria-label="Invite actions">
+      <!-- Row 1 -->
+      <a class="btn" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
+      <a class="btn" href="event.ics" download>Add to Calendar</a>
+      <!-- Row 2 -->
+      <a class="btn" href="https://www.babylist.com/list/sanjana-dube" target="_blank" rel="noopener">Registry</a>
+      <a class="btn" href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank" rel="noopener">Photo Gallery</a>
+    </nav>
+
+  </section>
 
 </body>
 </html>
