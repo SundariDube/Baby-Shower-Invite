@@ -29,7 +29,6 @@
     .player-wrap{
       position:absolute; inset:0; overflow:hidden;
     }
-    /* magic: width based on viewport height so 16:9 covers either dimension */
     .player{
       position:absolute; top:50%; left:50%;
       height:100vh; width:177.78vh;  /* 16/9 * 100vh */
@@ -37,7 +36,6 @@
       pointer-events:auto; /* allow taps */
     }
     @media (min-aspect-ratio: 16/9){
-      /* On very wide screens, base on width instead */
       .player{ width:100vw; height:56.25vw; } /* 9/16 * 100vw */
     }
 
@@ -50,17 +48,17 @@
       box-shadow:var(--shadow);
     }
 
-    /* Center custom play button */
+    /* Center custom play button (80px) */
     .playbtn{
       position:relative; z-index:15;
-      width:120px; height:120px; border-radius:50%;
+      width:80px; height:80px; border-radius:50%;
       background:var(--btn); color:#fff;
       display:grid; place-items:center;
       box-shadow:var(--shadow);
       cursor:pointer; transition:transform .15s ease, opacity .2s ease;
     }
-    .playbtn:hover{ transform:scale(1.03) }
-    .playbtn svg{ width:42px; height:42px; margin-left:4px; fill:#fff }
+    .playbtn:hover{ transform:scale(1.05) }
+    .playbtn svg{ width:28px; height:28px; margin-left:3px; fill:#fff }
 
     /* Two-row buttons docked near bottom */
     .cta{
@@ -133,29 +131,24 @@
     const app     = document.getElementById('app');
     const playBtn = document.getElementById('playBtn');
 
-    // Create the player when API is ready
     function onYouTubeIframeAPIReady(){
       player = new YT.Player('ytPlayer', {
-        videoId: 'AYPs8Yv30Vw',
+        videoId: 'VQlbJfzj3gE',  // <-- updated video
         playerVars: {
           playsinline: 1,
           rel: 0,
           modestbranding: 1,
-          controls: 0,      // clean look
+          controls: 0,
           fs: 0,
           iv_load_policy: 3
         },
-        events: {
-          'onStateChange': onState
-        }
+        events: { 'onStateChange': onState }
       });
     }
     window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
-    // UI reactions to player state
     function onState(e){
       const s = e.data;
-      // -1 unstarted, 0 ended, 1 playing, 2 paused, 3 buffering, 5 cued
       if (s === YT.PlayerState.PLAYING){
         app.classList.remove('is-idle');
         app.classList.add('is-playing');
@@ -165,11 +158,8 @@
       }
     }
 
-    // Start playing when the custom play button is tapped
     playBtn.addEventListener('click', () => {
-      if (player && player.playVideo){
-        player.playVideo();
-      }
+      if (player && player.playVideo){ player.playVideo(); }
     });
   </script>
 </body>
