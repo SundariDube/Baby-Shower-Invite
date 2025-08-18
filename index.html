@@ -2,256 +2,136 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Baby Shower Invite — Sanjana & Pryank</title>
-  <meta name="description" content="Watch the invite video and tap to RSVP, add to calendar, view the registry or photo gallery." />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Baby Shower Invite — Sanjana &amp; Family</title>
+  <meta name="description" content="Watch the invite video and tap to RSVP, add to calendar, view the registry, and photo gallery."/>
   <style>
-    :root {
-      --accent: #87cdd6;      /* theme aqua */
-      --ink: #0f2b31;         /* dark ink on aqua */
+    :root{
+      --brand:#87cdd6;        /* aqua */
+      --text:#0e2b2d;         /* deep teal for labels */
+      --btn-bg:#87cdd6;
+      --btn-text:#0e2b2d;
+      --btn-shadow:0 8px 18px rgba(0,0,0,.12);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background: radial-gradient(120% 120% at 50% 0%, #eaf7f7 0%, #cfeeed 40%, #b6e2e6 100%);
+      overflow:hidden; /* never scroll */
     }
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      overflow: hidden;        /* one screen only */
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: #000;        /* only seen for a split second before iframe paints */
+    /* Watermark (top-left) */
+    .tag{
+      position:fixed; z-index:20;
+      top:calc(env(safe-area-inset-top,0) + 12px); left:12px;
+      background:#ecf6f6cc; backdrop-filter: blur(6px);
+      border:1px solid #d8eeee; color:#234a4d;
+      padding:10px 16px; border-radius:16px; font-weight:700;
     }
 
-    /* ===== Fullscreen stage ===== */
-    .stage {
-      position: fixed;
-      inset: 0;
+    /* Full-screen hero */
+    .hero{
+      position:fixed; inset:0; z-index:1;
+      /* soft ocean tint behind the player */
+      background: radial-gradient(140% 100% at 50% -10%, #eaf7f7 0%, #cfeeed 45%, #b6e2e6 100%);
+    }
+    .player-wrap{
+      position:absolute; inset:0; overflow:hidden;
+      /* centers the iframe */
+      display:grid; place-items:center;
+    }
+    /* Full-bleed iframe sizing that respects orientation & iOS toolbars */
+    .player{
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      border:0; display:block;
+      /* Landscape default (16:9) */
+      width:100vw; height:56.25vw;
+    }
+    @media (orientation:portrait){
+      /* Make the PLAYER itself fill the screen height; YouTube may still show thin side bands internally */
+      .player{ width:177.78svh; height:100svh; } /* 16/9 * height */
     }
 
-    /* YouTube iframe sized as true "cover" */
-    .video-wrap {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      z-index: 0;
-      background: #000;
+    /* Custom play overlay (sits above YouTube UI) */
+    .play-overlay{
+      position:absolute; inset:0; display:grid; place-items:center;
+      pointer-events:none; /* clicks pass through */
     }
-    #yt {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 100vw;
-      height: 56.25vw;               /* 100 / (16/9) -> 56.25vw to maintain 16:9 */
-      transform: translate(-50%, -50%);
-      border: 0;
-      pointer-events: auto;
+    .play-overlay .blob{
+      width:min(22svh,120px); aspect-ratio:1/1;
+      border-radius:50%;
+      background:var(--brand);
+      box-shadow:0 6px 24px rgba(0,0,0,.18);
+      display:grid; place-items:center;
+      opacity:.95;
     }
-    /* If screen is wider than 16:9, size by height to keep covering */
-    @media (min-aspect-ratio: 16/9) {
-      #yt {
-        width: 177.78vh;              /* 100 * (16/9) */
-        height: 100vh;
-      }
+    .play-overlay .blob:after{
+      content:"";
+      border-left: calc(min(22svh,120px) * .24) solid #fff;
+      border-top:  calc(min(22svh,120px) * .14) solid transparent;
+      border-bottom: calc(min(22svh,120px) * .14) solid transparent;
+      margin-left: calc(min(22svh,120px) * .06);
     }
 
-    /* Soft veil so text/buttons are readable on bright frames */
-    .veil {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, rgba(0,0,0,.05), rgba(0,0,0,.18) 70%);
-      z-index: 1;
-      pointer-events: none;
+    /* Buttons dock */
+    .dock{
+      position:fixed; z-index:15; left:0; right:0;
+      bottom: max(12px, env(safe-area-inset-bottom,0) + 8px);
+      display:grid; gap:10px;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      padding:0 12px;
     }
+    .btn{
+      appearance:none; border:0; cursor:pointer;
+      background:var(--btn-bg); color:var(--btn-text);
+      padding:14px 12px; border-radius:var(--radius);
+      font-weight:800; font-size:16px; text-align:center;
+      box-shadow:var(--btn-shadow);
+      text-decoration:none; display:block;
+    }
+    .btn:active{ transform:translateY(1px); filter:brightness(.98); }
 
-    /* ===== Custom Play Overlay (blocks the red YouTube overlay) ===== */
-    .play-overlay {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      z-index: 2;
-      background: rgba(0,0,0,0);     /* transparent; we only show the button */
-      transition: opacity .25s ease;
-    }
-    .play-overlay.hide { opacity: 0; pointer-events: none; }
-
-    .play-btn {
-      width: 108px;
-      height: 108px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      transform: translateZ(0);
-      transition: transform .12s ease, filter .12s ease;
-    }
-    .play-btn:hover  { filter: brightness(1.06); }
-    .play-btn:active { transform: scale(.96); }
-
-    /* Triangle */
-    .play-btn::before {
-      content: "";
-      margin-left: 6px;               /* optical centering */
-      width: 0; height: 0;
-      border-left: 26px solid var(--ink);
-      border-top: 16px solid transparent;
-      border-bottom: 16px solid transparent;
-    }
-
-    /* ===== Overlay UI (watermark + buttons) ===== */
-    .ui {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      display: grid;
-      grid-template-rows: 1fr auto;   /* watermark space, then buttons at bottom */
-    }
-
-    .badge {
-      place-self: start;
-      margin: 16px;
-      padding: 8px 16px;
-      background: rgba(255,255,255,.65);
-      color: #214449;
-      font-weight: 800;
-      border-radius: 14px;
-      backdrop-filter: blur(4px);
-      box-shadow: 0 4px 10px rgba(0,0,0,.18);
-      user-select: none;
-    }
-
-    .buttons {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      padding: 16px;
-      padding-bottom: calc(env(safe-area-inset-bottom,0) + 12px);
-      justify-items: center;
-    }
-    .row {
-      display: grid;
-      grid-auto-flow: column;
-      gap: 12px;
-    }
-    .btn {
-      padding: 12px 18px;
-      min-width: 150px;
-      border-radius: 9999px;
-      border: 0;
-      cursor: pointer;
-      font-weight: 800;
-      font-size: 16px;
-      background: var(--accent);
-      color: var(--ink);
-      box-shadow: 0 6px 14px rgba(0,0,0,.25);
-      transition: transform .15s ease, filter .15s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .btn:hover { filter: brightness(1.06); }
-    .btn:active { transform: scale(.97); }
-
-    @media (max-width: 350px) {
-      .btn { min-width: 132px; font-size: 15px; padding: 11px 14px; }
+    /* Tiny helper for very short screens so buttons don’t collide with player controls */
+    @media (max-height:560px){
+      .btn{ padding:12px 10px; font-size:15px }
     }
   </style>
 </head>
 <body>
-  <main class="stage" role="main">
-    <!-- Background video -->
-    <div class="video-wrap">
+  <!-- Watermark -->
+  <div class="tag">Sanjana &amp; Priyank</div>
+
+  <!-- Full-screen video -->
+  <section class="hero" aria-label="Invite video">
+    <div class="player-wrap">
+      <!-- The iframe is sized to fill the viewport (see CSS above) -->
       <iframe
-        id="yt"
-        src="https://www.youtube.com/embed/NyOU0G-FLTc?enablejsapi=1&controls=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&fs=0&disablekb=1"
+        class="player"
+        src="https://www.youtube.com/embed/NyOU0G-FLTc?rel=0&modestbranding=1&playsinline=1&fs=1&color=white"
         title="Baby Shower Invite Video"
-        allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
         allowfullscreen
       ></iframe>
-    </div>
 
-    <!-- Dim veil -->
-    <div class="veil" aria-hidden="true"></div>
-
-    <!-- Custom play -->
-    <div id="playOverlay" class="play-overlay" aria-live="polite">
-      <div id="playBtn" class="play-btn" aria-label="Play video"></div>
-    </div>
-
-    <!-- Foreground UI -->
-    <div class="ui">
-      <div class="badge">Sanjana &amp; Pryank</div>
-
-      <div class="buttons">
-        <!-- Row 1 -->
-        <div class="row">
-          <button class="btn"
-            onclick="window.open('https://babyshowersplash.rsvpify.com','_blank','noopener')">
-            RSVP
-          </button>
-          <a class="btn" href="event.ics" download>Add to Calendar</a>
-        </div>
-        <!-- Row 2 -->
-        <div class="row">
-          <button class="btn"
-            onclick="window.open('https://www.babylist.com/list/sanjana-dube','_blank','noopener')">
-            Registry
-          </button>
-          <button class="btn"
-            onclick="window.open('https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing','_blank','noopener')">
-            Photo Gallery
-          </button>
-        </div>
+      <!-- Aqua play dot (covers the default red button visually) -->
+      <div class="play-overlay" aria-hidden="true">
+        <div class="blob"></div>
       </div>
     </div>
-  </main>
+  </section>
 
-  <!-- YouTube IFrame API -->
-  <script>
-    // Load YT API
-    (function() {
-      var tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    })();
-
-    let player;
-    const overlay = document.getElementById('playOverlay');
-    const playBtn  = document.getElementById('playBtn');
-
-    // Called by YT API when ready
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('yt', {
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        },
-        playerVars: {
-          controls: 0,
-          rel: 0,
-          modestbranding: 1,
-          playsinline: 1,
-          iv_load_policy: 3,
-          fs: 0,
-          disablekb: 1
-        }
-      });
-    }
-    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
-
-    function onPlayerReady() {
-      // tap to play
-      playBtn.addEventListener('click', function () {
-        overlay.classList.add('hide');
-        try { player.playVideo(); } catch (e) { /* iOS will play on first tap anyway */ }
-      }, { passive: true });
-    }
-
-    function onPlayerStateChange(e) {
-      // Show overlay again if video ended
-      if (e.data === YT.PlayerState.ENDED) {
-        overlay.classList.remove('hide');
-      }
-    }
-  </script>
+  <!-- Button dock (two rows) -->
+  <nav class="dock" aria-label="Actions">
+    <!-- Row 1 -->
+    <a class="btn" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
+    <a class="btn" href="event.ics" download>Add to Calendar</a>
+    <!-- Row 2 -->
+    <a class="btn" href="https://www.babylist.com/list/sanjana-dube" target="_blank" rel="noopener">Registry</a>
+    <a class="btn" href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank" rel="noopener">Photo Gallery</a>
+  </nav>
 </body>
 </html>
