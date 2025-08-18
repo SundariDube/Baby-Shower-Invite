@@ -3,196 +3,174 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sanjana & Pryank — Baby Shower Invite</title>
+  <title>Baby Shower Invite — Sanjana & Family</title>
+  <meta name="description" content="Watch the invite video and tap to RSVP, add to calendar, view the registry, or open the photo gallery." />
   <style>
-    :root {
-      --teal: #87cdd6;
-      --teal-hover: #6ec0ca;
-      --pill-bg: rgba(255,255,255,.85);
-      --safe: env(safe-area-inset-bottom, 0px);
+    :root{
+      --btn:#87cdd6;          /* sea blue */
+      --btnText:#0e2a2c;      /* deep teal for contrast */
+      --badge:#e9f1ef;        /* soft mist background for badge */
+      --shadow:0 10px 30px rgba(0,0,0,.25);
+      --radius:20px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;background:#000;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      overflow:hidden; /* lock background scrolling */
     }
 
-    /* Base / reset */
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; }
-    body { background: #000; color: #111; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-
-    /* Full-screen stage */
-    .hero {
-      position: relative;
-      width: 100vw;
-      height: 100svh;                 /* iOS-friendly viewport */
-      overflow: hidden;
-      background: #000;
-      touch-action: manipulation;
+    /* ====== Fullscreen stage ====== */
+    .stage{
+      position:fixed; inset:0; overflow:hidden;
+      display:grid; place-items:center;
+    }
+    /* Cover YouTube video: scale to always fill (mobile + desktop) */
+    .player-wrap{
+      position:absolute; inset:0; overflow:hidden;
+    }
+    /* magic: width based on viewport height so 16:9 covers either dimension */
+    .player{
+      position:absolute; top:50%; left:50%;
+      height:100vh; width:177.78vh;  /* 16/9 * 100vh */
+      transform:translate(-50%,-50%);
+      pointer-events:auto; /* allow taps */
+    }
+    @media (min-aspect-ratio: 16/9){
+      /* On very wide screens, base on width instead */
+      .player{ width:100vw; height:56.25vw; } /* 9/16 * 100vw */
     }
 
-    /* YouTube iframe fills the viewport */
-    #player {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
+    /* Top badge */
+    .badge{
+      position:fixed; top:16px; left:16px; z-index:20;
+      background:var(--badge); color:#234043;
+      padding:10px 16px; border-radius:14px;
+      font-weight:700; letter-spacing:.2px;
+      box-shadow:var(--shadow);
     }
 
-    /* Watermark pill */
-    .mark {
-      position: absolute; z-index: 10;
-      top: 16px; left: 16px;
-      padding: 10px 16px;
-      border-radius: 14px;
-      background: var(--pill-bg);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      font-weight: 800; color: #22423f;
-      box-shadow: 0 8px 24px rgba(0,0,0,.18);
-      user-select: none;
+    /* Center custom play button */
+    .playbtn{
+      position:relative; z-index:15;
+      width:120px; height:120px; border-radius:50%;
+      background:var(--btn); color:#fff;
+      display:grid; place-items:center;
+      box-shadow:var(--shadow);
+      cursor:pointer; transition:transform .15s ease, opacity .2s ease;
     }
+    .playbtn:hover{ transform:scale(1.03) }
+    .playbtn svg{ width:42px; height:42px; margin-left:4px; fill:#fff }
 
-    /* Buttons (always two rows, two columns) */
-    .cta {
-      position: absolute; z-index: 10;
-      left: 0; right: 0; bottom: max(14px, var(--safe));
-      padding: 0 16px;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 14px;
-      justify-content: center;
-      align-items: center;
-      transition: opacity .25s ease;
+    /* Two-row buttons docked near bottom */
+    .cta{
+      position:fixed; left:0; right:0; bottom:38px; z-index:18;
+      display:grid; gap:14px; justify-items:center;
     }
-    .btn {
-      display: inline-block;
-      text-align: center;
-      text-decoration: none;
-      font-weight: 800;
-      padding: 14px 16px;
-      border-radius: 22px;
-      background: var(--teal);
-      color: #08272b;
-      box-shadow: 0 10px 26px rgba(0,0,0,.22);
-      transition: transform .08s ease, background .15s ease, filter .15s ease;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
+    .row{
+      display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
+      padding:0 14px;
     }
-    .btn:active { transform: translateY(1px) scale(.99); }
-    .btn:hover { background: var(--teal-hover); }
+    .btn{
+      appearance:none; border:0; text-decoration:none;
+      background:var(--btn); color:var(--btnText);
+      padding:14px 20px; border-radius:var(--radius);
+      font-weight:800; letter-spacing:.2px; font-size:18px;
+      box-shadow:var(--shadow);
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:180px;
+    }
+    .btn:active{ transform:translateY(1px) }
 
-    /* Big center play (custom teal) */
-    .play {
-      position: absolute; z-index: 11;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      pointer-events: auto;
-      transition: opacity .25s ease, visibility .25s ease;
-    }
-    .play-btn {
-      width: clamp(88px, 24vw, 140px);
-      aspect-ratio: 1/1;
-      border-radius: 50%;
-      background: var(--teal);
-      box-shadow: 0 12px 32px rgba(0,0,0,.35);
-      display: grid; place-items: center;
-    }
-    .play-tri {
-      width: 0; height: 0;
-      border-left: clamp(18px, 5vw, 28px) solid #083039;
-      border-top: clamp(12px, 3.2vw, 18px) solid transparent;
-      border-bottom: clamp(12px, 3.2vw, 18px) solid transparent;
-      margin-left: clamp(4px, 1vw, 8px);
-    }
+    /* Fade UI away while playing */
+    .is-playing .playbtn,
+    .is-playing .cta { opacity:0; pointer-events:none; transition:opacity .25s ease }
+    .is-idle .playbtn,
+    .is-idle .cta   { opacity:1;  pointer-events:auto; }
 
-    /* Hidden state when playing */
-    .hide {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    @media (max-width: 360px) {
-      .btn { font-size: 15px; padding: 12px 12px; }
-    }
+    /* Safe-area breathing room for iOS */
+    .cta{ padding-bottom: max(38px, env(safe-area-inset-bottom)); }
   </style>
 </head>
 <body>
-
-  <section class="hero" aria-label="Invite video">
-    <!-- Watermark (correct spelling) -->
-    <div class="mark">Sanjana &amp; Pryank</div>
+  <div id="app" class="stage is-idle">
+    <!-- Watermark badge -->
+    <div class="badge">Sanjana &amp; Pryank</div>
 
     <!-- YouTube player -->
-    <div id="player"></div>
-
-    <!-- Custom center play (teal) -->
-    <div class="play" id="playOverlay" role="button" aria-label="Play video">
-      <div class="play-btn"><div class="play-tri"></div></div>
+    <div class="player-wrap" aria-hidden="true">
+      <div id="ytPlayer" class="player"></div>
     </div>
 
-    <!-- Buttons overlay: row1 (RSVP + Add), row2 (Registry + Gallery) -->
-    <nav class="cta" id="cta" aria-label="Invite actions">
-      <a class="btn" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
-      <a class="btn" href="event.ics" download>Add to Calendar</a>
-      <a class="btn" href="https://www.babylist.com/list/sanjana-dube" target="_blank" rel="noopener">Registry</a>
-      <a class="btn" href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank" rel="noopener">Photo Gallery</a>
+    <!-- Custom play button -->
+    <button id="playBtn" class="playbtn" aria-label="Play video">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+
+    <!-- Buttons (two rows) -->
+    <nav class="cta" aria-label="Invite actions">
+      <div class="row">
+        <a class="btn" href="https://babyshowersplash.rsvpify.com" target="_blank" rel="noopener">RSVP</a>
+        <a class="btn" href="event.ics" download>Add to Calendar</a>
+      </div>
+      <div class="row">
+        <a class="btn" href="https://www.babylist.com/list/sanjana-dube" target="_blank" rel="noopener">Registry</a>
+        <a class="btn" href="https://drive.google.com/drive/folders/1aUDBEAVpd65IPybCtdKmelSdVylS9li0?usp=sharing" target="_blank" rel="noopener">Photo Gallery</a>
+      </div>
     </nav>
-  </section>
+  </div>
 
   <!-- YouTube IFrame API -->
   <script>
-    // Load the API
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
+    // Load the YT API
+    (function(){
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    })();
 
-    const VIDEO_ID = "AYPs8Yv30Vw"; // your new YouTube video (Shorts) ID
     let player;
+    const app     = document.getElementById('app');
+    const playBtn = document.getElementById('playBtn');
 
-    // Called by YT API
-    window.onYouTubeIframeAPIReady = function () {
-      player = new YT.Player('player', {
-        videoId: VIDEO_ID,
+    // Create the player when API is ready
+    function onYouTubeIframeAPIReady(){
+      player = new YT.Player('ytPlayer', {
+        videoId: 'AYPs8Yv30Vw',
         playerVars: {
           playsinline: 1,
-          modestbranding: 1,
           rel: 0,
-          controls: 0,          // minimal chrome
-          iv_load_policy: 3,
+          modestbranding: 1,
+          controls: 0,      // clean look
           fs: 0,
-          enablejsapi: 1
+          iv_load_policy: 3
         },
         events: {
-          'onReady': onReady,
           'onStateChange': onState
         }
       });
-    };
-
-    const playOverlay = document.getElementById('playOverlay');
-    const cta = document.getElementById('cta');
-
-    function onReady() {
-      // Start only when user taps our custom play
-      playOverlay.addEventListener('click', () => {
-        try { player.playVideo(); } catch(e) {}
-        playOverlay.classList.add('hide');
-        cta.classList.add('hide');     // hide buttons while playing
-      }, { passive: true });
     }
+    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
-    function onState(e) {
-      // YT.PlayerState: -1 unstarted, 0 ended, 1 playing, 2 paused, 3 buffering
-      if (e.data === YT.PlayerState.PLAYING) {
-        playOverlay.classList.add('hide');
-        cta.classList.add('hide');
-      } else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) {
-        // show buttons again when user pauses or video ends
-        cta.classList.remove('hide');
-        playOverlay.classList.remove('hide');
+    // UI reactions to player state
+    function onState(e){
+      const s = e.data;
+      // -1 unstarted, 0 ended, 1 playing, 2 paused, 3 buffering, 5 cued
+      if (s === YT.PlayerState.PLAYING){
+        app.classList.remove('is-idle');
+        app.classList.add('is-playing');
+      } else if (s === YT.PlayerState.ENDED || s === YT.PlayerState.PAUSED){
+        app.classList.remove('is-playing');
+        app.classList.add('is-idle');
       }
     }
+
+    // Start playing when the custom play button is tapped
+    playBtn.addEventListener('click', () => {
+      if (player && player.playVideo){
+        player.playVideo();
+      }
+    });
   </script>
 </body>
 </html>
